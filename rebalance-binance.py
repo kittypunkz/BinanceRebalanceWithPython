@@ -2,21 +2,19 @@ import ccxt
 from songline import Sendline
 
 while True:
-  apiKey = "QPreLBCnzw9cwwFGL9OBbvZ9N6kWCa7mERnDbGkpLsrKg2vq7HdZgt4jMsw0wtmq" #@param {type:"string"}
-  secret = "toNyqtuIdoErW0KtNQk6Mz7oyfYtsI7hFGlfVoaGIo4P22OEWkllqbXOcpCkRDsb" #@param {type:"string"}
-  password = ""                   #@param {type:"string"}
-  Account_name  = "BINANCE"           #@param {type:"string"}
+  apiKey = " " #Enter your API Key from Binance
+  secret = " " #Enter you Secret API Key From Binance
+  Account_name  = "BINANCE" 
 
-  pair_trade = 'BTC/USDT'          #@param {type:"string"}
-  Asset_RB   = 'BTC'              #@param {type:"string"}
-  Asset_Base = 'USDT'             #@param {type:"string"}
+  pair_trade = 'BTC/USDT'   #Select What Asset Pair you want
+  Asset_RB   = 'BTC'        #Enter Asset you want to rebalance
+  Asset_Base = 'USDT'       #Enter Base Asset (eg. USDT, BUSD or another asset you want)
 
-  Rebalance_percent = 5.5           #@param 
+  Rebalance_percent = 3     #Percentage of rebalance 
 
-  line_token = 'ARnYmPCo1HMmnXJxFBHRtUALbWoEBnpSDZ7bYHpX562'  #@param {type:"string"}
+  line_token = ' '          #Enter your LINE Notify API Key
   messenger = Sendline(line_token)
 
-####################################################
   exchange = ccxt.binance  ({
     'apiKey' : apiKey ,'secret' : secret ,'password' : password ,'enableRateLimit': True
   })
@@ -53,20 +51,16 @@ while True:
   print("#########################################")
 
   if   Asset_01_Value > (Rebalance_mark + (Rebalance_mark*Rebalance_percent/100) ) :
-    print("Asset_01_Value ",Asset_01_Value ,">", (Rebalance_mark + (Rebalance_mark*Rebalance_percent/100) ))
-    print("SELL")
     diff_sell  = Asset_01_Value - Rebalance_mark
     diff_sell_str = str(diff_sell)
-    print(diff_sell)
+    print("Rebalance Status : Sell " + diff_sell_str + "USD")
     messenger.sendtext("Rebalance Status : Sell " + diff_sell_str + "USD")
     exchange.create_order(pair_trade ,'market','sell',(diff_sell/Average_price))
 
   elif Asset_01_Value < (Rebalance_mark - (Rebalance_mark*Rebalance_percent/100) ) :
-    print("Asset_01_Value ",Asset_01_Value ,"<", (Rebalance_mark - (Rebalance_mark*Rebalance_percent/100) ))
-    print("Buy")
     diff_buy  = Rebalance_mark - Asset_01_Value
     diff_buy_str = str(diff_buy)
-    print(diff_buy)
+    print("Rebalance Status : Buy " + diff_buy_str + "USD")
     messenger.sendtext("Rebalance Status : Buy " + diff_buy_str + "USD")
     exchange.create_order(pair_trade ,'market','buy',(diff_buy/Average_price))
     
